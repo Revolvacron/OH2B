@@ -1,0 +1,223 @@
+import sys, pygame, os, numpy
+pygame.init()
+questionArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/One_heart_to_break/questionarray.txt',dtype=str, delimiter=';')
+optionArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/One_heart_to_break/optionarray.txt', dtype=str, delimiter=';')
+resultsArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/One_heart_to_break/resultarray.txt', dtype=str, delimiter=';')
+continueArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/One_heart_to_break/contarray.txt', dtype=bool, delimiter=';')
+nextArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/One_heart_to_break/nextarray.txt', dtype=int, delimiter=';')
+current_question = "Error"
+current_options = numpy.array(['Error','Error','Error','Error'])
+current_results = numpy.array(['Error','Error','Error','Error'])
+InactiveGroup = pygame.sprite.Group()
+ActiveGroup = pygame.sprite.Group()
+test = pygame.sprite.Sprite('menu.png')
+test.add(InactiveGroup)
+test.rect()
+
+def load_image(name):
+	fullname = os.path.join('C:/Users/ccp/Documents/GitHub/One_heart_to_break/Images/', name)
+	image = pygame.image.load(fullname)
+	return image
+
+def position_image(name,x,y):
+	name.center = (x,y)
+	return name
+
+def left_mouse_Clicked():
+	mouseState = pygame.mouse.get_pressed()[0]
+	return mouseState
+
+def getMousePos():
+	mousePos = pygame.mouse.get_pos()
+	return mousePos
+
+def createGamescreen():
+	return 0
+
+def fileToArray(filePath):
+    imageList = open(filePath)
+    contents = imageList.read().split(",")
+
+def question(conv):
+	## Displays a question
+	current_question = questionArray[conv]
+	print ""
+	print 'She says: ',  current_question
+
+def options(n):
+	##Displays conversation options
+	current_options = optionArray[n]
+	print ""
+	print 'Choices: '
+	for x in range(1,5):
+		print x,': ', current_options[x-1]
+	
+def results(conv,choice):
+	## Prints a predetermined response
+	current_results = resultsArray[choice,conv]
+	print ""
+	print 'She says: ', current_results
+
+
+def conversation(point):
+	##Processes each conversation
+	continue_conv=1
+	start_point=point
+	while continue_conv == 1:
+		question (start_point)
+		options(start_point)		
+		i = raw_input('What will you say? ')
+		i = int(i) - 1
+		results(i,start_point)
+		continue_conv = continueArray[start_point,i]
+		start_point = nextArray[start_point]
+
+
+def run_game():
+	##Setup screen and clock
+	SCREEN_WIDTH, SCREEN_HEIGHT = 1024, 768
+	BG_COLOR = (0, 0, 0)
+	screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
+	clock = pygame.time.Clock()
+
+	##Load Menu images to surfaces
+	Menu = load_image('menu.png')
+	Start = load_image("start.png")
+	Exit = load_image("exit.png")
+
+	##Load level images to surfaces
+	Babalu = load_image("Babalu.png")
+	Dillon = load_image("Dillon.png")
+	Hallgrimskirkja = load_image("Hallgrimskirkja.png")
+	Hlemmur = load_image("Hlemmur.png")
+	Hresso = load_image("Hresso.png")
+	Kaffibarrinn = load_image("Kaffibarrinn.png")
+	Nexus = load_image("Nexus.png")
+	Tjornin = load_image("Tjornin.png")
+	Map = load_image("map.png")
+
+	MenuRect = Menu.get_rect()
+	StartRect = Start.get_rect()
+	ExitRect = Exit.get_rect()
+
+	##Place menu images
+	position_image(MenuRect,SCREEN_WIDTH/2,SCREEN_HEIGHT/2)
+	position_image(StartRect, SCREEN_WIDTH/2,(SCREEN_HEIGHT/2)-100)
+	position_image(ExitRect, SCREEN_WIDTH/2,600)
+	menuState = 1
+	while True:
+	        # Limit frame speed to 50 FPS
+	        #
+	        time_passed = clock.tick(50)
+
+	    	for event in pygame.event.get():
+	        	if event.type == pygame.QUIT:
+	           		exit_game()
+
+	        	if event.type == pygame.MOUSEBUTTONDOWN:
+       				x, y = event.pos
+       				print x,y
+				if menuState == 1:
+ 					if ExitRect.collidepoint(x, y):
+ 						exit_game()
+					ActiveGroup.draw
+		        	screen.blit(Start, StartRect)
+		        	screen.blit(Exit, ExitRect)
+		        	print menuState
+
+ 					if StartRect.collidepoint(x,y):
+ 						menuState = 2
+
+				if menuState == 2:
+					#Get Level surface rectangles
+					BabaluMap = pygame.transform.scale(Babalu, (120,120))
+					BabaluRect = BabaluMap.get_rect()
+
+					DillonMap = pygame.transform.scale(Dillon, (120,120))
+					DillonRect = DillonMap.get_rect()
+
+					HallgrimskirkjaMap = pygame.transform.scale(Hallgrimskirkja, (120,120))
+					HallgrimskirkjaRect = HallgrimskirkjaMap.get_rect()
+
+					HlemmurMap = pygame.transform.scale(Hlemmur, (120,120))
+					HlemmurRect = HlemmurMap.get_rect()
+
+					HressoMap = pygame.transform.scale(Hresso, (120,120))
+					HressoRect = HressoMap.get_rect()
+
+					KaffibarrinnMap = pygame.transform.scale(Kaffibarrinn, (120, 120))
+					KaffibarrinnRect = KaffibarrinnMap.get_rect()
+
+					NexusMap = pygame.transform.scale(Nexus, (120,120))
+					NexusRect = NexusMap.get_rect()
+
+					TjorninMap = pygame.transform.scale(Tjornin, (120,120))
+					TjorninRect = TjorninMap.get_rect()
+
+					MapRect = Map.get_rect()
+
+					position_image(MapRect, 512, 388)
+					position_image(BabaluRect, 790, 455)
+					position_image(NexusRect, 60, 60)
+					position_image(HlemmurRect, SCREEN_WIDTH/2, 60)
+					position_image(DillonRect, 512, 180)
+					position_image(HallgrimskirkjaRect, 512, 180)
+					position_image(HressoRect, 512, 180)
+					position_image(KaffibarrinnRect, 512, 180)
+					position_image(TjorninRect, 512, 180)
+
+					screen.blit(Map,MapRect)
+					screen.blit(NexusMap, NexusRect)
+					screen.blit(HlemmurMap, HlemmurRect)
+					screen.blit(DillonMap, DillonRect)
+					screen.blit(HallgrimskirkjaMap, HallgrimskirkjaRect)
+					screen.blit(HressoMap, HressoRect)
+					screen.blit(KaffibarrinnMap, KaffibarrinnRect)
+					screen.blit(TjorninMap, TjorninRect)
+
+					Start = pygame.transform.scale(Start, (0,0))
+					Exit = pygame.transform.scale(Exit, (0,0))
+					
+
+					if BabaluRect.collidepoint(x, y):
+						menuState = 3
+
+					if DillonRect.collidepoint(x, y):
+						menuState = 4					
+
+					if HlemmurRect.collidepoint(x, y):
+						menuState = 5					
+
+					if HressoRect.collidepoint(x, y):
+						menuState = 6
+
+					if KaffibarrinnRect.collidepoint(x,y):
+						menuState = 7
+
+					if NexusRect.collidepoint(x,y):
+						menustate = 8
+
+					if TjorninRect.collidepoint(x,y):
+						menustate = 9
+
+				if menuState == 8:
+					NexusRect = Nexus.get_rect()
+					screen.blit (Nexus, NexusRect)
+
+
+				print menuState
+				pygame.display.flip()
+
+def exit_game():
+    sys.exit()
+run_game()
+
+
+
+
+
+
+
+
+
+
