@@ -1,11 +1,11 @@
 import sys, pygame, os, numpy, time
 from pygame import font 
 pygame.init()
-questionArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/One_heart_to_break/questionarray.txt',dtype=str, delimiter=';')
-optionArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/One_heart_to_break/optionarray.txt', dtype=str, delimiter=';')
-resultsArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/One_heart_to_break/resultarray.txt', dtype=str, delimiter=';')
-continueArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/One_heart_to_break/contarray.txt', dtype=bool, delimiter=';')
-nextArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/One_heart_to_break/nextarray.txt', dtype=int, delimiter=';')
+questionArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/OH2B/questionarray.txt',dtype=str, delimiter=';')
+optionArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/OH2B/optionarray.txt', dtype=str, delimiter=';')
+resultsArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/OH2B/resultarray.txt', dtype=str, delimiter=';')
+continueArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/OH2B/contarray.txt', dtype=bool, delimiter=';')
+nextArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/OH2B/nextarray.txt', dtype=int, delimiter=';')
 current_question = "Error"
 current_options = numpy.array(['Error','Error','Error','Error'])
 current_results = numpy.array(['Error','Error','Error','Error'])
