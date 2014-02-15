@@ -54,7 +54,7 @@ def results(conv,choice):
 	print 'She says: ', current_results
 
 
-def conversation(point):
+def conversation(point,p,rect,screen):
 	##Processes each conversation
 	continue_conv=1
 	start_point=point
@@ -209,7 +209,9 @@ def run_game():
 
 				if menuState == 6:
 					HressoRect = Hresso.get_rect()
-					screen.blit (Hresso, HressoRect)
+					screen.blit (Hresso,HressoRect)
+					conversation(0)
+
 				if menuState == 7:
 					KaffibarrinnRect = Kaffibarrinn.get_rect()
 					screen.blit (Kaffibarrinn, KaffibarrinnRect)
