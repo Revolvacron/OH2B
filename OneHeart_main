@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import sys, pygame, os, time
-=======
-import sys, pygame, os, numpy
->>>>>>> dc293a43e59eea011a108c925911e380322b8172
+import sys, pygame, os, numpy, time
 pygame.init()
 questionArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/One_heart_to_break/questionarray.txt',dtype=str, delimiter=';')
 optionArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/One_heart_to_break/optionarray.txt', dtype=str, delimiter=';')
@@ -84,17 +80,6 @@ def run_game():
 	Start = load_image("start.png")
 	Exit = load_image("exit.png")
 
-	##Load level images to surfaces
-	Babalu = load_image("Babalu.png")
-	Dillon = load_image("Dillon.png")
-	Hallgrimskirkja = load_image("Hallgrimskirkja.png")
-	Hlemmur = load_image("Hlemmur.png")
-	Hresso = load_image("Hresso.png")
-	Kaffibarrinn = load_image("Kaffibarrinn.png")
-	Nexus = load_image("Nexus.png")
-	Tjornin = load_image("Tjornin.png")
-	Map = load_image("map.png")
-
 	MenuRect = Menu.get_rect()
 	StartRect = Start.get_rect()
 	ExitRect = Exit.get_rect()
@@ -132,6 +117,17 @@ def run_game():
 
 				if menuState == 2:
 					#Get Level surface rectangles
+					##Load level images to surfaces
+					Babalu = load_image("Babalu.png")
+					Dillon = load_image("Dillon.png")
+					Hallgrimskirkja = load_image("Hallgrimskirkja.png")
+					Hlemmur = load_image("Hlemmur.png")
+					Hresso = load_image("Hresso.png")
+					Kaffibarrinn = load_image("Kaffibarrinn.png")
+					Nexus = load_image("Nexus.png")
+					Tjornin = load_image("Tjornin.png")
+					Map = load_image("map.png")
+
 					BabaluMap = pygame.transform.scale(Babalu, (240,240))
 					BabaluRect = BabaluMap.get_rect()
 
