@@ -36,12 +36,18 @@ class picture(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self) #call Sprite intializer
         self.image, self.rect = load_image(imageName)
         self.isDrawn = False
-                
-    def update(self,imageRect):
-        imageRect = self.rect
-        return imageRect
 
-        
+class cursor(pygame.sprite.Sprite):
+    def __init__(self,imageName):
+        pygame.sprite.Sprite.__init__(self) #call Sprite intializer
+        self.image, self.rect = load_image(imageName)
+        self.isDrawn = True
+
+    def update(self):
+        pos = pygame.mouse.get_pos()
+        print self.rect.midtop
+        self.rect.midtop = pos
+
 
 def main():
     """this function is called when the program starts.
@@ -53,12 +59,12 @@ def main():
     SCREEN_WIDTH, SCREEN_HEIGHT = 1024, 768
     BG_COLOR = (0, 0, 0)
     screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
-    pygame.mouse.set_visible(1)
+    pygame.mouse.set_visible(0)
 
 #Create The Backgound
     background = pygame.Surface(screen.get_size())
     print background.get_rect()
-    background.fill((250, 250, 250))
+    background.fill(BG_COLOR)
 
 
 #Put Text On The Background, Centered
@@ -79,27 +85,23 @@ def main():
     Exit = picture('Exit.png')
     Map = picture('Map.png')
     Ui = picture('Ui.png')
+    cursorTalk = cursor('cursorTalk.png')
     Hresso = picture('Hresso.png')
     Kaffibarinn = picture('Kaffibarinn.png')
     Hallgrimskirkja = picture('Hallgrimskirkja.png')
     Eymundsson = picture('Eymundsson.png')
     Hospital = picture('Hospital.png')
     Prikid = picture('Prikid.png')
-    MenuRect = 0, 0, 200, 200
-    MapRect = ((0,0,200,200))
-    StartRect = ((0,0,200,200))
-    ExitRect = ((0,0,200,200))
-    UiRect = ((0,0,200,200))
-    HressoRect = ((0,0,200,200))
-    KaffibarinnRect = ((0,0,200,200))
-    HallgrimskirkjaRect = ((0,0,200,200))
-    EymundssonRect = ((0,0,200,200))
-    HospitalRect = ((0,0,200,200))
-    PrikidRect = ((0,0,200,200))
+    
     queue = drawQueue()
+    cursorQueue = pygame.sprite.LayeredUpdates()
+    cursorTalk.add(cursorQueue)
     Menu.add(queue)
     Start.add(queue)
     Exit.add(queue)
+    Menu.rect.midtop = (SCREEN_WIDTH/2,0)
+    Start.rect.midtop = (SCREEN_WIDTH/3,500)
+    Exit.rect.midtop = ((SCREEN_WIDTH/3)*2,500)
     gameState = 1
     x, y = (0, 0)
 
@@ -114,24 +116,26 @@ def main():
             elif (event.type == pygame.KEYDOWN) and (event.key == pygame.K_RETURN):
                 return
             elif event.type == MOUSEBUTTONDOWN:
-                x, y = event.pos                
+                if Start.rect.colliderect(cursorTalk.rect):
+                    Menu.remove(queue)
+                    Start.remove(queue)
+                    Exit.remove(queue)
+                    Map.add(queue)
+                    Ui.add(queue)
+                elif Exit.rect.colliderect(cursorTalk.rect):
+                    return              
             elif event.type is MOUSEBUTTONUP:
                 x, y = None, None
-            if StartRect.collidepoint(x, y):
-                Menu.remove(queue)
-                Start.remove(queue)
-                Exit.remove(queue)
-                Map.add(queue)
-                Ui.add(queue)
-            elif ExitRect.collidepoint(x, y):
-                return
 
 
       
 
     #Draw Everything
+        cursorTalk.update()
         screen.blit(background, (0, 0))
         queue.draw(screen)
+        cursorQueue.move_to_front(cursorTalk)
+        cursorQueue.draw(screen)
         pygame.display.flip()
 
 main()
