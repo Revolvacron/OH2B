@@ -1,5 +1,12 @@
-import os, pygame, sys
+import os, pygame, sys, time, numpy, msvcrt
 from pygame.locals import *
+questionArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/OH2B/questionarray.txt',dtype=str, delimiter=';')
+optionArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/OH2B/optionarray.txt', dtype=str, delimiter=';')
+resultsArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/OH2B/resultarray.txt', dtype=str, delimiter=';')
+endArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/OH2B/endarray.txt', dtype=str, delimiter=';')
+pointsArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/OH2B/pointsarray.txt', dtype=int, delimiter=';')
+nextArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/OH2B/nextarray.txt', dtype=int, delimiter=';')
+charArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/OH2B/chararray.txt', dtype=int, delimiter=';')
 
 #functions to create our resources
 def load_image(name):
@@ -49,6 +56,41 @@ class cursor(pygame.sprite.Sprite):
         self.rect.midtop = pos
 
 
+def question(conv):
+    current_question = questionArray[conv]
+    print ""
+    print 'She says: ',  current_question
+def options(n):
+    current_options = optionArray[n]
+    print ""
+    print 'Choices: '
+    for x in range(1,5):
+        print x,': ', current_options[x-1]
+    
+def results(conv,choice):
+    ##print 'You say: ',current_options[i]
+    current_results = resultsArray[choice,conv]
+    print ""
+    print 'She says: ', current_results
+
+def conversation(point):
+    Current_Points = 0;
+    start_point= charArray[point]
+    while Current_Points > -20 and charArray[point]+3 >= start_point:
+        question (start_point)
+        options(start_point)        
+        i = msvcrt.getch()
+        i = int(i) - 1
+        results(i,start_point)
+        New_Points = Current_Points + pointsArray[start_point,i]
+        start_point = start_point + 1
+        Current_Points = New_Points
+    if Current_Points <= -10:
+        print endArray[point, 1]
+    else:
+        print endArray[point, 0]
+
+
 def main():
     """this function is called when the program starts.
        it initializes everything it needs, then runs in
@@ -60,6 +102,11 @@ def main():
     BG_COLOR = (0, 0, 0)
     screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
     pygame.mouse.set_visible(0)
+    current_question = "Error"
+    current_options = numpy.array(['Error','Error','Error','Error'])
+    current_results = numpy.array(['Error','Error','Error','Error'])
+    Current_Points = 0
+    New_Points = 0
 
 #Create The Backgound
     background = pygame.Surface(screen.get_size())
@@ -80,13 +127,15 @@ def main():
 
 #Prepare Game Objects
     clock = pygame.time.Clock()
-    gameState = 1
+    gameState = 0
     Menu = picture('Menu.png')
     Start = picture('Start.png')
     Exit = picture('Exit.png')
     Map = picture('Map.png')
     Ui = picture('Ui.png')
     cursorTalk = cursor('cursorTalk.png')
+
+    Hallgrimskirkja = picture('Hallgrimskirkja.png')
     Hresso = picture('Hresso.png')
     Kaffibarinn = picture('Kaffibarinn.png')
     Lebowskis = picture ('Lebowskis.png')
@@ -98,12 +147,17 @@ def main():
     mapQueue = pygame.sprite.LayeredUpdates()
     queue = pygame.sprite.LayeredUpdates()
     cursorQueue = pygame.sprite.LayeredUpdates()
+    transQueue = pygame.sprite.LayeredUpdates()
 
     cursorTalk.add(cursorQueue)
-
     Start.add(queue)
     Exit.add(queue)
-    Epilogue.add(queue)
+    Menu.add(queue)
+    queue.move_to_front(Start)
+    queue.move_to_front(Exit)
+
+    #Epilogue.add(transQueue)
+
     Menu.rect.midtop = (SCREEN_WIDTH/2,0)
     Start.rect.midtop = (SCREEN_WIDTH/3,500)
     Exit.rect.midtop = ((SCREEN_WIDTH/3)*2,500)
@@ -125,46 +179,71 @@ def main():
                     Menu.remove(queue)
                     Start.remove(queue)
                     Exit.remove(queue)
-                    Intro.add(queue)
                     Ui.add(queue)
-                    endIntro = raw_input('SPACE')
-                    print "alskd"
-                    
+                    time.sleep (1)
+                    transQueue.add(Intro)
+                    transQueue.move_to_front(Intro)
+                    time.sleep(0.5)
+                    pygame.display.update()
+                    Intro.remove(transQueue)
                     Map.add(queue)
                     Hresso.add(mapQueue)
                     Kaffibarinn.add(mapQueue)
                     Lebowskis.add(mapQueue)
-
                     Hresso.rect.center = (181, 90)
-                    Lebowskis.rect.center = (445, 213)
+                    Lebowskis.rect.center = (645, 280)
                     Kaffibarinn.rect.center = (413, 192)
+                    conversation(0)
 
                 if Hresso.rect.colliderect(cursorTalk.rect):
                     Map.remove(queue)
                     Hresso.remove(mapQueue)
                     Kaffibarinn.remove(mapQueue)
                     Lebowskis.remove(mapQueue)
-                    print "TRYYYEEEE"
+                    conversation(3)
+                    Hospital.add(mapQueue)
+                    print ""
+                    print "Later, in the Hospital"
+                    print ""
+                    print "Good morning! I'm so sorry to bother you, but would you by chance have change for a 5000 ISK note? I'm here with my sister visiting our grandfather. He loves the candy in the vending machines, but I forgot to bring change!"
+                    print ""
+                    time.sleep(2)
+                    print "Thank you so much! He'll really appreciate it, and so do I.  Not enough people in the world are helpful, you know?  You're the first person that's even bothered to answer me, never mind actually solve my problem! So who are you visiting?"
+                    print ""
+                    time.sleep(2)
+                    print "Oh no!  Your poor friend.  You know, a similar thing happened to my sister last week, so I totally understand how upsetting it can be.  Tell you what, since you have been so helpful to me, and I'm sure your friend could do with some cheering up, why don't the two of you come out with my sister and I this evening?"
+                    print ""
+                    time.sleep(2)
+                    print "You will?  That's fantastic!  We'll be singing with our church choir at Hallgrimskirkja - don't miss it!"
+                    print ""
+                    time.sleep(2)
+                    print ""
+                    print "Even Later, at Hallgrimskirkja"
+                    print ""
+                    conversation(4)
+
 
                 if Kaffibarinn.rect.colliderect(cursorTalk.rect):
                     Map.remove(queue)
                     Hresso.remove(mapQueue)
                     Kaffibarinn.remove(mapQueue)
                     Lebowskis.remove(mapQueue)
-                    print "TRYYYEEEE"
+                    conversation(1)
 
                 if Lebowskis.rect.colliderect(cursorTalk.rect):
                     Map.remove(queue)
                     Hresso.remove(mapQueue)
                     Kaffibarinn.remove(mapQueue)
                     Lebowskis.remove(mapQueue)
-                    print "TRYYYEEEE"
+                    conversation(2)
 
                 elif Exit.rect.colliderect(cursorTalk.rect):
                     print "TRYYYEEEE"
-                    return              
+                    return
+
             elif event.type is MOUSEBUTTONUP:
                 x, y = None, None
+
 
 
       
@@ -172,11 +251,12 @@ def main():
     #Draw Everything
         cursorTalk.update()
         screen.blit(background, (0, 0))
-        
         queue.draw(screen)
+        transQueue.draw(screen)
         mapQueue.draw(screen)
         cursorQueue.move_to_front(cursorTalk)
         cursorQueue.draw(screen)
+
         pygame.display.flip()
 
 main()
