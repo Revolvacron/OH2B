@@ -90,6 +90,10 @@ def main():
     Hresso = picture('Hresso.png')
     Kaffibarinn = picture('Kaffibarinn.png')
     Lebowskis = picture ('Lebowskis.png')
+    
+    Intro = picture ("IntroScreen.png")
+    Hospital = picture ("Hospital.png")
+    Epilogue = picture ("Epilogue.png")
 
     mapQueue = pygame.sprite.LayeredUpdates()
     queue = pygame.sprite.LayeredUpdates()
@@ -97,10 +101,11 @@ def main():
 
     cursorTalk.add(cursorQueue)
 
+    Intro.add(queue)
     Menu.add(queue)
     Start.add(queue)
     Exit.add(queue)
-
+    Epilogue.add(queue)
     Menu.rect.midtop = (SCREEN_WIDTH/2,0)
     Start.rect.midtop = (SCREEN_WIDTH/3,500)
     Exit.rect.midtop = ((SCREEN_WIDTH/3)*2,500)
@@ -135,6 +140,13 @@ def main():
 
                     print "alskd"
                 if Hresso.rect.colliderect(cursorTalk.rect):
+                    Map.remove(queue)
+                    Hresso.remove(mapQueue)
+                    Kaffibarinn.remove(mapQueue)
+                    Lebowskis.remove(mapQueue)
+                    print "TRYYYEEEE"
+
+                if Kaffibarinn.rect.colliderect(cursorTalk.rect)
                     Map.remove(queue)
                     Hresso.remove(mapQueue)
                     Kaffibarinn.remove(mapQueue)
