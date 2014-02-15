@@ -1,5 +1,4 @@
 import sys, pygame, os, numpy, time
-from pygame import font 
 pygame.init()
 questionArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/OH2B/questionarray.txt',dtype=str, delimiter=';')
 optionArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/OH2B/optionarray.txt', dtype=str, delimiter=';')
@@ -17,10 +16,6 @@ def load_image(name):
 
 def position_image(name,x,y):
 	name.center = (x,y)
-	return name
-
-def position_image_left(name,x,y):
-	name.Left = (x,y)
 	return name
 
 def left_mouse_Clicked():
@@ -67,8 +62,6 @@ def conversation(point):
 		question (start_point)
 		options(start_point)		
 		i = raw_input('What will you say? ')
-		while not i.isdigit():
-			i = raw_input('What will you say? ')
 		i = int(i) - 1
 		results(i,start_point)
 		continue_conv = continueArray[start_point,i]
@@ -134,7 +127,6 @@ def run_game():
 					Nexus = load_image("Nexus.png")
 					Tjornin = load_image("Tjornin.png")
 					Map = load_image("map.png")
-					Ui = load_image('UI.png')
 
 					BabaluMap = pygame.transform.scale(Babalu, (240,240))
 					BabaluRect = BabaluMap.get_rect()
@@ -161,10 +153,8 @@ def run_game():
 					#TjorninRect = TjorninMap.get_rect()
 
 					MapRect = Map.get_rect()
-					UiRect = Ui.get_rect()
 
-					position_image(MapRect, 512, 302)
-					position_image(UiRect, 512,SCREEN_HEIGHT/2)
+					position_image(MapRect, 512, 388)
 					position_image(BabaluRect, 790, 455)
 					position_image(NexusRect, 60, 60)
 					position_image(HlemmurRect, SCREEN_WIDTH/2, 60)
@@ -175,7 +165,6 @@ def run_game():
 					#position_image(TjorninRect, 512, 240)
 
 					screen.blit(Map,MapRect)
-					screen.blit(Ui,UiRect)
 					screen.blit(NexusMap, NexusRect)
 					screen.blit(HlemmurMap, HlemmurRect)
 					screen.blit(DillonMap, DillonRect)
@@ -209,30 +198,66 @@ def run_game():
 
 				if menuState == 3:
 					BabaluRect = Babalu.get_rect()
+					MiniMap = pygame.transform.scale(Map.png, (240,240))
+					MiniMapRect = MiniMap.get_rect()
+
+					if MiniMapRect.collidepoin(x,y):
+						menuState = 1
 					screen.blit (Babalu, BabaluRect)
 
 				if menuState == 4:
 					DillonRect = Dillon.get_rect()
+					MiniMap = pygame.transform.scale(Map.png, (240,240))
+					MiniMapRect = MiniMap.get_rect()
+
+					if MiniMapRect.collidepoin(x,y):
+						menuState = 1
 					screen.blit (Dillon, DillonRect)
 				if menuState == 5:
 					HlemmurRect = Hlemmur.get_rect()
+					MiniMap = pygame.transform.scale(Map.png, (240,240))
+					MiniMapRect = MiniMap.get_rect()
+
+					if MiniMapRect.collidepoin(x,y):
+						menuState = 1
 					screen.blit (Hlemmur, HlemmurRect)
 
 				if menuState == 6:
 					HressoRect = Hresso.get_rect()
+					MiniMap = pygame.transform.scale(Map.png, (240,240))
+					MiniMapRect = MiniMap.get_rect()
+					if MiniMapRect.collidepoin(x,y):
+						menuState = 1
+					screen.blit (MiniMap,MiniMapRect)
 					screen.blit (Hresso,HressoRect)
+
 					conversation(0)
 
 				if menuState == 7:
 					KaffibarrinnRect = Kaffibarrinn.get_rect()
+					MiniMap = pygame.transform.scale(Map.png, (240,240))
+					MiniMapRect = MiniMap.get_rect()
+					if MiniMapRect.collidepoin(x,y):
+						menuState = 1
+					screen.blit (MiniMap,MiniMapRect)
 					screen.blit (Kaffibarrinn, KaffibarrinnRect)
 
 				if menuState == 8:
 					NexusRect = Nexus.get_rect()
+					MiniMap = pygame.transform.scale(Map.png, (240,240))
+					MiniMapRect = MiniMap.get_rect()
+					if MiniMapRect.collidepoin(x,y):
+						menuState = 1
+					screen.blit (MiniMap,MiniMapRect)
 					screen.blit (Nexus, NexusRect)
 
 				if menuState == 9:
 					TjorninRect = Tjornin.get_rect()
+					MiniMap = pygame.transform.scale(Map.png, (240,240))
+					MiniMapRect = MiniMap.get_rect()
+					if MiniMapRect.collidepoin(x,y):
+						menuState = 1
+						screen.blit (MiniMap,MiniMapRect)
 					screen.blit (Tjornin, TjorninRect)
 
 

@@ -1,44 +1,5 @@
-import os, pygame, sys, numpy
+import os, pygame, sys
 from pygame.locals import *
-questionArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/One_heart_to_break/questionarray.txt',dtype=str, delimiter=';')
-optionArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/One_heart_to_break/optionarray.txt', dtype=str, delimiter=';')
-resultsArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/One_heart_to_break/resultarray.txt', dtype=str, delimiter=';')
-continueArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/One_heart_to_break/contarray.txt', dtype=bool, delimiter=';')
-nextArray = numpy.loadtxt('C:/Users/ccp/Documents/GitHub/One_heart_to_break/nextarray.txt', dtype=int, delimiter=';')
-current_question = "Error"
-current_options = numpy.array(['Error','Error','Error','Error'])
-current_results = numpy.array(['Error','Error','Error','Error'])
-
-def question(conv):
-    current_question = questionArray[conv]
-    print ""
-    print 'She says: ',  current_question
-
-def options(n):
-    current_options = optionArray[n]
-    print ""
-    print 'Choices: '
-    for x in range(1,5):
-        print x,': ', current_options[x-1]
-    
-def results(conv,choice):
-    ##print 'You say: ',current_options[i]
-    current_results = resultsArray[choice,conv]
-    print ""
-    print 'She says: ', current_results
-
-
-def conversation(point):
-    continue_conv=1
-    start_point=point
-    while continue_conv == 1:
-        question (start_point)
-        options(start_point)        
-        i = raw_input('What will you say? ')
-        i = int(i) - 1
-        results(i,start_point)
-        continue_conv = continueArray[start_point,i]
-        start_point = nextArray[start_point]
 
 #functions to create our resources
 def load_image(name):
@@ -119,6 +80,7 @@ def main():
 
 #Prepare Game Objects
     clock = pygame.time.Clock()
+    gameState = 1
     Menu = picture('Menu.png')
     Start = picture('Start.png')
     Exit = picture('Exit.png')
@@ -127,21 +89,22 @@ def main():
     cursorTalk = cursor('cursorTalk.png')
     Hresso = picture('Hresso.png')
     Kaffibarinn = picture('Kaffibarinn.png')
-    Hallgrimskirkja = picture('Hallgrimskirkja.png')
-    Eymundsson = picture('Eymundsson.png')
-    Hospital = picture('Hospital.png')
-    Prikid = picture('Prikid.png')
-    
-    queue = drawQueue()
+    Lebowskis = picture ('Lebowskis.png')
+
+    mapQueue = pygame.sprite.LayeredUpdates()
+    queue = pygame.sprite.LayeredUpdates()
     cursorQueue = pygame.sprite.LayeredUpdates()
+
     cursorTalk.add(cursorQueue)
+
     Menu.add(queue)
     Start.add(queue)
     Exit.add(queue)
+
     Menu.rect.midtop = (SCREEN_WIDTH/2,0)
     Start.rect.midtop = (SCREEN_WIDTH/3,500)
     Exit.rect.midtop = ((SCREEN_WIDTH/3)*2,500)
-    gameState = 1
+
     x, y = (0, 0)
 
 #Main Loop
@@ -161,7 +124,25 @@ def main():
                     Exit.remove(queue)
                     Map.add(queue)
                     Ui.add(queue)
+
+                    Hresso.add(mapQueue)
+                    Kaffibarinn.add(mapQueue)
+                    Lebowskis.add(mapQueue)
+
+                    Hresso.rect.center = (181, 90)
+                    Lebowskis.rect.center = (445, 213)
+                    Kaffibarinn.rect.center = (413, 192)
+
+                    print "alskd"
+                if Hresso.rect.colliderect(cursorTalk.rect):
+                    Map.remove(queue)
+                    Hresso.remove(mapQueue)
+                    Kaffibarinn.remove(mapQueue)
+                    Lebowskis.remove(mapQueue)
+                    print "TRYYYEEEE"
+
                 elif Exit.rect.colliderect(cursorTalk.rect):
+                    print "TRYYYEEEE"
                     return              
             elif event.type is MOUSEBUTTONUP:
                 x, y = None, None
@@ -172,7 +153,9 @@ def main():
     #Draw Everything
         cursorTalk.update()
         screen.blit(background, (0, 0))
+        
         queue.draw(screen)
+        mapQueue.draw(screen)
         cursorQueue.move_to_front(cursorTalk)
         cursorQueue.draw(screen)
         pygame.display.flip()
