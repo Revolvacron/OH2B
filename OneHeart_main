@@ -19,6 +19,10 @@ def position_image(name,x,y):
 	name.center = (x,y)
 	return name
 
+def position_image_left(name,x,y):
+	name.Left = (x,y)
+	return name
+
 def left_mouse_Clicked():
 	mouseState = pygame.mouse.get_pressed()[0]
 	return mouseState
